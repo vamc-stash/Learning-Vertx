@@ -8,14 +8,18 @@ Vert.x does not impose any packaging or build environment. Since Vert.x core its
 Because Vert.x was designed for asynchronous communications it can deal with more concurrent network connections with less threads than synchronous APIs such as Java servlets or java.net socket classes.
 
 1. What is a verticle? 
-   - The unit of deployment in Vert.x is called a Verticle. A verticle processes incoming events over an event-loop, where events can be anything like receiving network buffers, timing events, or messages sent by other verticles. Each event shall be processed in a reasonable amount of time to not block the event loop.
+   - The unit of deployment in Vert.x is called a Verticle. Verticle is an isolated unit of work, that can scale independently. A verticle processes incoming events over an event-loop, where events can be anything like receiving network buffers, timing events, or messages sent by other verticles. Each event shall be processed in a reasonable amount of time to not block the event loop.
    - Incoming network data are being received from accepting threads then passed as events to the corresponding verticles. When a verticle opens a network server and is deployed more than once, then the events are being distributed to the verticle instances in a round-robin fashion which is very useful for maximizing CPU usage with lots of concurrent networked requests. Finally, verticles have a simple start / stop life-cycle, and verticles can deploy other verticles.
+   - There are two different types of verticles:
+   - 1. Standard verticle: Standard verticles are assigned an event loop thread when they are created and the start method is called with that event loop. A verticle instance is always executed on the same event loop. 
+   - 2. Worker verticle: It is just like a standard verticle, but it's executed using a thread from the Vert.x worker thread pool, rather than using an event loop. An instance is never executed concurrently by more than one thread. Worker verticles are designed for calling blocking code, as they won’t block any event loops.
 2. What an event loop is
 Event loop continuously check for new events, and each time a new event comes in, to quickly dispatch it to someone who knows how to handle it.
-Every event loop is attached to a thread. By default Vert.x attaches 2 event loops per CPU core thread. One is running the application, and another is called `vertx-blocked-thread-checker`, which is used for debugging i.e., it is useful to know if a handler is blocking longer than we want.
+Every event loop is attached to a thread. By default Vert.x attaches 2 event loops per CPU core thread. 
 Each verticle is assigned to a specific thread, and all handlers of that verticle are executed on that thread sequentially.  Multiple instances of the same verticle, however, can have their handlers executed at the same time. In fact, this holds for any two verticles. This means that if two verticles share a resource, you might still have to worry about concurrent access to that resource.
 `Vert.x is multithreaded, so it has to create a thread for each verticle` (however, maximum value depends on the cores of the machine, not on number of veritcles deployed) and `Vert.x has EventLoop, so it’s single threaded and is using only one CPU`(This means that thread blocking operations shall not be performed while executed on the event loop.)
-
+References:
+https://alexey-soshin.medium.com/understanding-vert-x-event-loop-46373115fb3e
 3. Event Bus
 Event bus is the main tool for different verticles to communicate through asynchronous message passing. The event-bus allows passing any kind of data, although JSON is the preferred exchange format since it allows verticles written in different languages to communicate. The supported communication patterns are: 1. point-to-point messaging(direct messages), 2.request-response messaging and 3. publish / subscribe for broadcasting messages.
 The event bus allows verticles to transparently communicate not just within the same JVM process:
@@ -23,6 +27,8 @@ The event bus allows verticles to transparently communicate not just within the 
 - the event-bus can be accessed through a simple TCP protocol for third-party applications to communicate,
 - the event-bus can also be exposed over general-purpose messaging bridges (e.g, AMQP, Stomp),
 - a SockJS bridge allows web applications to seamlessly communicate over the event bus from JavaScript running in the browser by receiving and publishing messages just like any verticle would do.
+References:
+https://alexey-soshin.medium.com/understanding-vert-x-event-bus-c31759757ce8
 4. Future Objects and callbacks
 The Vert.x core APIs are based on callbacks to notify of asynchronous events. 
 There are two ways to deal with async calls in Vert.x.
@@ -33,3 +39,5 @@ Promise represents the writable side of an action that may, or may not, have occ
 Future: reference, read-only, at a value yet to be calculated
 Promise: variable, assignable only once, to which Future refers
 In other words, a Future shows the value previously written in a Promise in read-only mode.
+References: 
+https://dev.to/cherrychain/future-composition-in-vert-x-3gp8
