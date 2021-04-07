@@ -21,6 +21,7 @@ https://alexey-soshin.medium.com/understanding-vert-x-event-loop-46373115fb3e
 ### Event Bus
    - Event bus is the main tool for different verticles to communicate through asynchronous message passing. The event-bus allows passing any kind of data, although JSON is the preferred exchange format since it allows verticles written in different languages to communicate. 
    - The supported communication patterns are: 1. point-to-point messaging(direct messages), 2.request-response messaging and 3. publish / subscribe for broadcasting messages.
+   - When communicating inside the same JVM, object will be passed just as memory reference between verticles. So, there is no overhead when using it.
    - The event bus allows verticles to transparently communicate not just within the same JVM process:
       - when network clustering is activated, the event bus is distributed so that messages can be sent to verticles running on other application nodes, meaning Verticles that are not necessarily running on the same machine can communicate with each other.
       - the event-bus can be accessed through a simple TCP protocol for third-party applications to communicate,
