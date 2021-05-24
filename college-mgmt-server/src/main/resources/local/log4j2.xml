@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="base-path">logs</Property>
+        <Property name="file-name">server</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss:SSS} [%t] %c{1} - %M %L %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="RollingFileLogger" filename="${base-path}/${file-name}.log" filePattern="${base-path}/${file-name}-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 KB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.learn.college" level="debug" additivity="true">
+            <AppenderRef ref="RollingFileLogger"/>
+        </Logger>
+        
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
