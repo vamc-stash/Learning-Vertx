@@ -1,13 +1,15 @@
 package com.learn.college.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import static com.learn.college.common.config.Constants.*;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
   @JsonProperty(DB_USER_ID)
@@ -25,10 +27,12 @@ public class UserDTO {
   @JsonProperty(DB_PASSWORD)
   private String password;
 
+  @JsonProperty(PERMISSION_ROLE_ID)
   private Integer roleId;
 
-  @JsonProperty(AUTH_TOKEN)
   private String authToken;
+
+  private String resetPassword;
 
   public UserDTO() {}
 

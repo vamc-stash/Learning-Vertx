@@ -21,6 +21,8 @@ paths:
     post:
       summary: 'signup api for Admin'
       operationId: 'sign-up'
+      tags:
+        - auth
       requestBody:
         required: true
         content:
@@ -46,6 +48,8 @@ paths:
     post:
       summary: 'sign in api for Admin'
       operationId: 'sign-in'
+      tags:
+        - auth
       requestBody:
         required: true
         content:
@@ -67,10 +71,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse500'
-  /api/v1/auth/ping:
+  /api/v1/college/ping:
     get:
       summary: 'test api for sign in verification'
       operationId: 'sign-in-ping'
+      tags:
+        - ping
       parameters:
         - in: header
           name: AUTH_TOKEN
@@ -96,7 +102,202 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse500'
-
+  /api/v1/auth/resetPassword:
+    post:
+      summary: 'api for password change'
+      operationId: 'reset-password'
+      tags:
+        - auth
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResetPassword'
+      responses:
+        200:
+          description: 'Password change success'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /api/v1/college/get:
+    get:
+      summary: 'get all details permitted based on logged in user'
+      operationId: 'get-info'
+      tags:
+        - college
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: 'Details fetched successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /api/v1/college/registerCourses:
+    post:
+      summary: 'api for students to register for courses'
+      operationId: 'register-courses'
+      tags:
+        - auth
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Courses'
+      responses:
+        200:
+          description: 'Course registration success'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /api/v1/college/updateUser:
+    post:
+      summary: 'api to update user details'
+      operationId: 'update-user'
+      tags:
+        - college
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        200:
+          description: 'update user success'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /api/v1/college/addUser:
+    post:
+      summary: 'api to add user details'
+      operationId: 'add-user'
+      tags:
+        - college
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUser'
+      responses:
+        200:
+          description: 'add user success'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+  /api/v1/college/addCourse:
+    post:
+      summary: 'api to add course details'
+      operationId: 'add-course'
+      tags:
+        - college
+      parameters:
+        - in: header
+          name: AUTH_TOKEN
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        200:
+          description: 'add course success'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
 
 components:
   schemas:
@@ -120,7 +321,7 @@ components:
 
     User:
       type: object
-      required: ['email', 'password']
+      required: [ 'email', 'password' ]
       properties:
         first_name:
           type: string
@@ -133,6 +334,33 @@ components:
         password:
           type: string
           minLength: 6
+    AddUser:
+      type: object
+      required: ['email', 'password', 'role_id']
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role_id:
+          type: integer
+          minimum: 1
+          maximum: 3
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+    UpdateUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
     UserJwtResponse:
       type: object
       properties:
@@ -146,3 +374,31 @@ components:
           type: string
         sub:
           type: string
+    UserResetPassword:
+      type: object
+      required: [ 'email', 'password' , 'resetPassword' ]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+          minLength: 6
+        resetPassword:
+          type: string
+          minLength: 6
+    Course:
+      type: object
+      properties:
+        title:
+          type: string
+        credits:
+          type: integer
+        teacher_id:
+          type: string
+    Courses:
+      type: object
+      properties:
+        courseIdList:
+          type: array
+          items:
+            type: string

@@ -19,8 +19,23 @@ public class Constants {
   public static final String CONFIG_FILE_PATH = "application-config.json";
 
   /** Common Terms */
-  public static final String ACCEPT = "accept";
+  public static final String COMMA = ",";
 
+  public static final String COMMA_SPACE = ", ";
+  public static final String EQUAL_VALUE = "=?";
+  public static final String SEMICOLON = ";";
+  public static final String UPDATE_SPACE = "update ";
+  public static final String SPACE_SET_SPACE = " set ";
+  public static final String SPACE_AND_SPACE = " and ";
+  public static final String SPACE_OR_SPACE = " or ";
+  public static final String GREATER_THAN_EQUAL_VALUE = ">=?";
+  public static final String LESS_THAN_EQUAL_VALUE = "<=?";
+  public static final String SPACE_WHERE_SPACE = " where ";
+  public static final String SPACE_IN_SPACE_BRACKET_BEGIN = " in (";
+  public static final String SPACE_VALUE = " ?";
+  public static final String SPACE_BRACKET_END = " )";
+
+  public static final String ACCEPT = "accept";
   public static final String ORIGIN = "origin";
   public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
   public static final String X_REQUESTED_WITH = "x-requested-with";
@@ -29,7 +44,6 @@ public class Constants {
   public static final String APPLICATION_JSON = "application/json";
   public static final String BODY = "body";
   public static final String PARAMS = "params";
-  public static final String AUTH_TOKEN = "auth-token";
   public static final String AUTH_TOKEN_CAPS = "AUTH_TOKEN";
   public static final String JWT = "jwt";
 
@@ -42,8 +56,7 @@ public class Constants {
   public static final String ERROR_INVALID_PASSWORD = "Invalid password";
   public static final String VALIDATION_SUCCESS = "Validation is success";
 
-  public static final String ADMIN_USER_SIGN_UP_SUCCESS = "Admin User SignUp Success";
-  public static final String ADMIN_USER_SIGN_UP_FAILURE = "Admin User SignUp Failure";
+  public static final String USER_SIGN_UP_SUCCESS = "User SignUp Success";
 
   /** API paths */
   public static final String PATH_COLLEGE_AUTH_BASE = "/api/v1/auth/";
@@ -53,12 +66,24 @@ public class Constants {
   public static final String PATH_PING = "/ping";
   public static final String PATH_SIGN_UP = "/signup";
   public static final String PATH_SIGN_IN = "/signin";
+  public static final String PATH_ADD_USER = "/addUser";
+  public static final String PATH_ADD_COURSE = "/addCourse";
+  public static final String PATH_RESET_PASS = "/resetPassword";
+  public static final String PATH_UPDATE_USER = "/updateUser";
+  public static final String PATH_REGISTER_COURSES = "/registerCourses";
+  public static final String PATH_GET = "/get";
 
   /** Swagger Operation Ids */
   public static final String USER_SIGN_UP = "sign-up";
 
   public static final String USER_SIGN_IN = "sign-in";
   public static final String USER_SIGN_IN_PING = "sign-in-ping";
+  public static final String ADD_USER = "add-user";
+  public static final String ADD_COURSE = "add-course";
+  public static final String RESET_PASS = "reset-password";
+  public static final String UPDATE_USER = "update-user";
+  public static final String REGISTER_COURSES = "register-courses";
+  public static final String GET_INFO = "get-info";
 
   /** Constants related to dbConfig */
   public static final String RESOURCES = "resources";
@@ -70,9 +95,7 @@ public class Constants {
 
   public static final String RESOURCE_KEY = "resource_key";
   public static final String RESOURCE_DESCRIPTION = "description";
-  public static final String RESOURCE_TYPE = "type";
   public static final String RESOURCE_METHOD = "method";
-  public static final String RESOURCE_STATUS = "status";
 
   /** Constants related to RolePermission Table */
   public static final String PERMISSION_TABLE = "role_permissions";
@@ -95,6 +118,13 @@ public class Constants {
   public static final String DB_LAST_NAME = "last_name";
   public static final String DB_EMAIL = "email";
   public static final String DB_PASSWORD = "password";
+
+  /** Constants related to Course Table */
+  public static final String DB_COURSE_ID = "course_id";
+
+  public static final String DB_COURSE_TITLE = "title";
+  public static final String DB_COURSE_CREDITS = "credits";
+  public static final String DB_COURSE_TEACHER = "teacher_id";
 
   /** Delimiter used to prepare combination of URL and method */
   public static final String DELIMITER = "@";

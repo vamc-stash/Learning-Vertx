@@ -72,6 +72,9 @@ public class UserVerticle extends AbstractVerticle {
             userRest.mountRouter(vertx, router);
             collegeRest.mountRouter(vertx, router);
 
+            router
+                .route()
+                .failureHandler(RestUtils::handleError); // this will handle context.fail() case
             httpServer = vertx.createHttpServer(ApplicationConfiguration.getHttpServerOptions());
             httpServer
                 .requestHandler(router)

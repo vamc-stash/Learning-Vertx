@@ -26,10 +26,6 @@ import java.util.Objects;
 @Slf4j
 public class DbUtils {
 
-  private static final String TRANSACTION_SUCCESSFUL = "Transaction Successful";
-
-  private static final String TRANSACTION_FAILED = "Transaction Failure";
-
   private static final String QUERY_EXECUTION_SUCCESS = "Query Execution Success";
 
   private static final String QUERY_EXECUTION_FAILED = "Error: Query Execution Failed";
@@ -42,10 +38,6 @@ public class DbUtils {
 
   private static final String CONNECTION = "connection";
   private static final String POOL = "pool";
-  private static final String DBNAME = "dbname";
-  private static final String DATABASE = "database";
-  private static final String USER = "user";
-  private static final String USER_NAME = "username";
 
   public DbUtils(Vertx vertx, JsonObject dbConfig) {
     JsonObject connectionConfig = dbConfig.getJsonObject(CONNECTION);
@@ -258,6 +250,31 @@ public class DbUtils {
                 Long lastInsertedId = rows.property(MySQLClient.LAST_INSERTED_ID);
                 log.debug("Last Inserted Id: {}", lastInsertedId);
                 handler.handle(Future.succeededFuture(lastInsertedId));
+              } else {
+                log.error(QUERY_EXECUTION_FAILED);
+                handler.handle(Future.failedFuture(ar.cause()));
+              }
+            });
+  }
+
+  /**
+   * Exec statements in batch
+   *
+   * @param sql prepared sql stmt
+   * @param tupleList List of tuple
+   * @param handler the handler
+   */
+  public void execBatch(String sql, List<Tuple> tupleList, Handler<AsyncResult<Void>> handler) {
+    Objects.requireNonNull(sql);
+    Objects.requireNonNull(tupleList);
+    client
+        .preparedQuery(sql)
+        .executeBatch(
+            tupleList,
+            ar -> {
+              if (ar.succeeded()) {
+                log.info(QUERY_EXECUTION_SUCCESS);
+                handler.handle(Future.succeededFuture());
               } else {
                 log.error(QUERY_EXECUTION_FAILED);
                 handler.handle(Future.failedFuture(ar.cause()));

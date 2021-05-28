@@ -28,7 +28,7 @@ public interface UserService {
   /**
    * Method inserts new User
    *
-   * @param userDTO UserDTO
+   * @param userDTO {@link UserDTO}
    * @param handler the handler
    */
   void insertUser(UserDTO userDTO, Handler<AsyncResult<Long>> handler);
@@ -40,13 +40,39 @@ public interface UserService {
    * @param roleId RoleID
    * @param handler the handler
    */
-  void insertUserRole(String userId, int roleId, Handler<AsyncResult<Long>> handler);
+  void insertUserRole(String userId, Integer roleId, Handler<AsyncResult<Long>> handler);
 
   /**
    * Method verifies user credentials
    *
-   * @param userDTO UserDTO
+   * @param inputUserDTO {@link UserDTO}
    * @param handler the handler
    */
-  void verifyUserByEmail(UserDTO userDTO, Handler<AsyncResult<UserDTO>> handler);
+  void verifyUserByEmail(UserDTO inputUserDTO, Handler<AsyncResult<UserDTO>> handler);
+
+  /**
+   * Method changes password
+   *
+   * @param inputUserDTO {@link UserDTO}
+   * @param handler the handler
+   */
+  void handleResetPassword(UserDTO inputUserDTO, Handler<AsyncResult<Void>> handler);
+
+  /**
+   * Method updates user details
+   *
+   * @param userDTO {@link UserDTO}
+   * @param handler the handler
+   */
+  void updateUser(UserDTO userDTO, Handler<AsyncResult<Void>> handler);
+
+  /**
+   * Method gets all details based on logged in user
+   *
+   * @param <T> type
+   * @param userId user id
+   * @param roleId role id
+   * @param handler the handler
+   */
+  <T> void getInfo(String userId, Integer roleId, Handler<AsyncResult<T>> handler);
 }

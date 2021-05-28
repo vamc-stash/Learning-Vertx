@@ -1,5 +1,6 @@
 package com.learn.college.api.rest;
 
+import com.learn.college.api.helper.UserServiceHelper;
 import com.learn.college.api.service.UserService;
 import com.learn.college.common.config.EnumConstants;
 import com.learn.college.common.dto.UserDTO;
@@ -12,8 +13,6 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.openapi.RouterBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
-
 import static com.learn.college.common.config.Constants.*;
 
 /** The type User Rest */
@@ -23,6 +22,9 @@ public class UserRest implements BaseRest {
   private static final UserRest userRest = new UserRest();
 
   private static final UserService userService = UserService.getInstance();
+
+  private static final String EMAIL_OR_PASSWORD_NOT_VALID = "Email/Password is not valid";
+  private static final String PASSWORD_CHANGE_SUCCESS = "Password is changed successfully";
 
   /**
    * Gets Singleton instance
@@ -53,6 +55,7 @@ public class UserRest implements BaseRest {
   public void addHandlerByOperationId(RouterBuilder routerBuilder) {
     routerBuilder.operation(USER_SIGN_UP).handler(RoutingContext::next);
     routerBuilder.operation(USER_SIGN_IN).handler(RoutingContext::next);
+    routerBuilder.operation(RESET_PASS).handler(RoutingContext::next);
   }
 
   /**
@@ -76,6 +79,12 @@ public class UserRest implements BaseRest {
         .handler(RestUtils.parseBody(UserDTO.class))
         .handler(this::handleSignIn)
         .handler(RestUtils::handleError);
+    router
+        .post(PATH_RESET_PASS)
+        .consumes(APPLICATION_JSON)
+        .handler(RestUtils.parseBody(UserDTO.class))
+        .handler(this::handleResetPassword)
+        .handler(RestUtils::handleError);
     return router;
   }
 
@@ -86,46 +95,12 @@ public class UserRest implements BaseRest {
    */
   private void handleSignUp(RoutingContext context) {
     UserDTO userDTO = context.get(BODY);
+    userDTO.setRoleId(EnumConstants.ROLES.ADMIN.getValue());
     if (CommonUtils.isValidEmail(userDTO.getEmail())
         && CommonUtils.isValidPassword(userDTO.getPassword())) {
-      userService.findUserByEmail(
-          userDTO.getEmail(),
-          handler -> {
-            if (handler.succeeded()) {
-              UserDTO user = handler.result();
-              if (Objects.nonNull(user)) {
-                log.error("User with given email id already exists");
-                context.fail(new Throwable("User with given email id already exists"));
-                context.next();
-              }
-              userService.insertUser(
-                  userDTO,
-                  userHandler -> {
-                    if (userHandler.succeeded()) {
-                      log.debug("User is inserted into users table");
-                      userService.insertUserRole(
-                          userDTO.getUserId(),
-                          EnumConstants.ROLES.ADMIN.getValue(),
-                          userRoleHandler -> {
-                            if (userRoleHandler.succeeded()) {
-                              log.debug("Admin User signup success");
-                              RestUtils.handleSuccess(context, ADMIN_USER_SIGN_UP_SUCCESS);
-                            } else {
-                              log.error("Admin User signup failure");
-                              RestUtils.handleBadRequest(context, userRoleHandler.cause());
-                            }
-                          });
-                    } else {
-                      RestUtils.handleBadRequest(context, userHandler.cause());
-                    }
-                  });
-            } else {
-              context.fail(handler.cause());
-              context.next();
-            }
-          });
+      UserServiceHelper.addUser(userDTO, context);
     } else {
-      context.fail(new Throwable("Email/Password is not valid"));
+      context.fail(new Throwable(EMAIL_OR_PASSWORD_NOT_VALID));
       context.next();
     }
   }
@@ -138,5 +113,16 @@ public class UserRest implements BaseRest {
   private void handleSignIn(RoutingContext context) {
     UserDTO userDTO = context.get(BODY);
     userService.verifyUserByEmail(userDTO, RestUtils.dataHandler(context));
+  }
+
+  /**
+   * Method allows to change password
+   *
+   * @param context RoutingContext
+   */
+  private void handleResetPassword(RoutingContext context) {
+    UserDTO userDTO = context.get(BODY);
+    userService.handleResetPassword(
+        userDTO, RestUtils.voidHandler(context, PASSWORD_CHANGE_SUCCESS));
   }
 }

@@ -7,6 +7,7 @@ import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -90,7 +91,9 @@ public class RoleManagementHelper {
    * @return true if permission exists else false
    */
   public static Boolean hasPermission(Integer roleId, String resourceId) {
-    if (Objects.isNull(permissionMap) || Objects.isNull(roleId) || Objects.isNull(resourceId)) {
+    if (Objects.isNull(permissionMap)
+        || Objects.isNull(roleId)
+        || StringUtils.isBlank(resourceId)) {
       log.error(" has Permission {} \n {} \n {}", permissionMap, roleId, resourceId);
       return false;
     }

@@ -16,6 +16,11 @@ public class RoleManagementServiceImpl implements RoleManagementService {
 
   private static final RoleManagementDAO roleManagementDAO = RoleManagementDAO.getInstance();
 
+  /**
+   * {@inheritDoc}
+   *
+   * @param roleAccessHandler async handler
+   */
   @Override
   public void loadRoleManagementData(Handler<AsyncResult<RoleManagementDTO>> roleAccessHandler) {
     Future<Map<String, String>> resourceFuture =

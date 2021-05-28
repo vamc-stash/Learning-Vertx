@@ -20,7 +20,7 @@ public interface RoleManagementService {
   /**
    * Method loads role based permissions data from database
    *
-   * @param handler async handler
+   * @param roleAccessHandler async handler
    */
-  void loadRoleManagementData(Handler<AsyncResult<RoleManagementDTO>> handler);
+  void loadRoleManagementData(Handler<AsyncResult<RoleManagementDTO>> roleAccessHandler);
 }
