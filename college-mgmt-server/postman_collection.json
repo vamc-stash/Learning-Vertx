@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "86552f3e-28e4-4294-bb44-9f603f1b5db9",
+		"name": "CollegeMgmtServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/ping",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin125@mail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/auth/signup",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/ping",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiODQ1ZWQ2OWYtNzc2Ni00NTk0LWFhNWUtZjBkZDllNmEwMjYzIiwicm9sZV9pZCI6MiwiaWF0IjoxNjIyMTM5OTg5LCJleHAiOjE2MjIxNTc5ODksImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.9B-GvtS-zYzzZRkNwf6EV9Cjp7oZMkQ3gsJ-n0V9mNA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base}}/api/v1/college/ping",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/auth/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"student2@mail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/auth/signin",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/addUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNDJmMWQyMGItMDA2Mi00OWE4LWE1MTMtN2E0NTM5OTJkZThiIiwicm9sZV9pZCI6MSwiaWF0IjoxNjIyMjI2MTAwLCJleHAiOjE2MjIyNDQxMDAsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.aRct-XEiUS_dF604QWbwlK3_3AtQEx4Iu0GBIhyW_w4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"teacher11@mail.com\",\r\n    \"password\": \"password\",\r\n    \"role_id\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/college/addUser",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"addUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/addCourse",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNDJmMWQyMGItMDA2Mi00OWE4LWE1MTMtN2E0NTM5OTJkZThiIiwicm9sZV9pZCI6MSwiaWF0IjoxNjIyMjI2MTAwLCJleHAiOjE2MjIyNDQxMDAsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.aRct-XEiUS_dF604QWbwlK3_3AtQEx4Iu0GBIhyW_w4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Social\",\r\n    \"credits\": 4,\r\n    \"teacher_id\": \"147f119c-d637-4391-88cd-45d87e309d1f\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/college/addCourse",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"addCourse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/auth/resetPassword",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNjYwMTA3MWYtZGYwZi00NzdkLWEwNzMtMzQ2NzE2NjJiOWJmIiwicm9sZV9pZCI6MiwiaWF0IjoxNjIyMTc0NDA2LCJleHAiOjE2MjIxOTI0MDYsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.pDl50ii4ZCibFsw0z-UfRtQkI1HtgM1-R7wfK0J7ayc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"teacher2@mail.com\",\r\n    \"password\": \"password\",\r\n    \"resetPassword\": \"newPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/auth/resetPassword",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"resetPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/updateUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiODQ1ZWQ2OWYtNzc2Ni00NTk0LWFhNWUtZjBkZDllNmEwMjYzIiwicm9sZV9pZCI6MiwiaWF0IjoxNjIyMjI2NjM0LCJleHAiOjE2MjIyNDQ2MzQsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.AB8bwaRTcd3j4Jrk5FRBXuQ0m6RdfmIkO_vef0z1rhY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\": \"Murdock\",\r\n    \"last_name\": \"Mat\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/college/updateUser",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"updateUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/registerCourses",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiOWYzMGIwYzAtMzRkNi00MzU0LWFkYjktMDA5MjQ3MzliZjM3Iiwicm9sZV9pZCI6MywiaWF0IjoxNjIyMjI2ODA0LCJleHAiOjE2MjIyNDQ4MDQsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.pyld_0KT8u7efN61IVYSyUrAuVnjZpevuGwRjrSfTg4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courseIdList\": [\"edeac470-1571-4468-a5ab-9361d1804ecc\", \"1d99434a-f822-4dc3-a3dd-680aaac46681\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/api/v1/college/registerCourses",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"registerCourses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/college/get",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "AUTH_TOKEN",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiOWYzMGIwYzAtMzRkNi00MzU0LWFkYjktMDA5MjQ3MzliZjM3Iiwicm9sZV9pZCI6MywiaWF0IjoxNjI0ODkwMzE2LCJleHAiOjE2MjQ5MDgzMTYsImlzcyI6IkNvbGxlZ2UtU2VydmVyLVByb3ZpZGVyIiwic3ViIjoiYXV0aCJ9.tPqA9aphbsmModYZycr31Hzs2ugQj5JdA-8IZf8Fk_M",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base}}/api/v1/college/get",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"college",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/health",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
