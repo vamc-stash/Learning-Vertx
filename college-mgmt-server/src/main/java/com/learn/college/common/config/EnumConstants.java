@@ -51,4 +51,10 @@ public class EnumConstants {
       return value;
     }
   }
+
+  /** Health Procedure */
+  public enum HEALTH_PROCEDURE {
+    DB_CONNECTION_STATUS,
+    DISK_SPACE_AVAILABILITY_STATUS
+  }
 }

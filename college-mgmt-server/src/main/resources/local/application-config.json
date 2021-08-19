@@ -44,5 +44,28 @@
       "expiresInMinutes": 300,
       "subject": "auth"
     }
+  },
+  "healthOptions": {
+    "endpoint": "/health",
+    "procedures": {
+      "DB_CONNECTION_STATUS": {
+        "connection": {
+          "port": 3306,
+          "host": "localhost",
+          "database": "college",
+          "user": "root",
+          "password": "891112@mysql",
+          "connectionTimeout": 5000,
+          "reConnectAttempts": 2,
+          "reConnectInterval": 1000
+        },
+        "pool": {
+          "maxSize": 5
+        }
+      },
+      "DISK_SPACE_AVAILABILITY_STATUS": {
+        "minSpaceRequired": 500000000
+      }
+    }
   }
 }

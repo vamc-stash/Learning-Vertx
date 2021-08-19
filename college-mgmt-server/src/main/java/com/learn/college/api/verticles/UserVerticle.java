@@ -2,6 +2,7 @@ package com.learn.college.api.verticles;
 
 import com.learn.college.api.auth.AuthenticateHandler;
 import com.learn.college.api.auth.AuthorizeHandler;
+import com.learn.college.api.health.HealthService;
 import com.learn.college.api.rest.CollegeRest;
 import com.learn.college.api.rest.UserRest;
 import com.learn.college.common.config.ApplicationConfiguration;
@@ -9,6 +10,7 @@ import com.learn.college.common.util.RestUtils;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
+import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.openapi.RouterBuilder;
@@ -26,6 +28,8 @@ public class UserVerticle extends AbstractVerticle {
 
   private static final UserRest userRest = UserRest.getInstance();
   private static final CollegeRest collegeRest = CollegeRest.getInstance();
+
+  private static final HealthService healthService = HealthService.getInstance();
 
   private HttpServer httpServer;
 
@@ -51,6 +55,13 @@ public class UserVerticle extends AbstractVerticle {
             collegeRest.addHandlerByOperationId(routerBuilder);
 
             final Router router = routerBuilder.createRouter();
+
+            // adding health checks
+            HealthCheckHandler healthCheckHandler = HealthCheckHandler.create(vertx);
+            healthService.registerProcedures(healthCheckHandler);
+            router
+                .get(ApplicationConfiguration.getHealthOptions().getString(HEALTH_END_POINT))
+                .handler(healthCheckHandler);
 
             router
                 .get(PATH_PING)
@@ -84,7 +95,9 @@ public class UserVerticle extends AbstractVerticle {
                         log.info("College Server is running");
                         startFuture.complete();
                       } else {
-                        log.error("College server is failed to start, {}", serverHandler.cause().getMessage());
+                        log.error(
+                            "College server is failed to start, {}",
+                            serverHandler.cause().getMessage());
                         startFuture.fail(
                             "Server initialization is failed. " + serverHandler.cause());
                       }

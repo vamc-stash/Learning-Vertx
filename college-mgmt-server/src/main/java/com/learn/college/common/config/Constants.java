@@ -129,4 +129,14 @@ public class Constants {
 
   /** Delimiter used to prepare combination of URL and method */
   public static final String DELIMITER = "@";
+
+  /** Health Check Constants */
+  public static final String APP_DIR_PATH = System.getProperty("user.dir");
+
+  public static final String MIN_SPACE_REQUIRED = "minSpaceRequired";
+  public static final String AVAILABLE_SPACE = "availableSpace";
+  public static final String HEALTH_END_POINT = "endpoint";
+  public static final String PROCEDURES = "procedures";
+  public static final String CONNECTION = "connection";
+  public static final String POOL = "pool";
 }
