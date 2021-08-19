@@ -57,6 +57,7 @@ public class Constants {
   public static final String VALIDATION_SUCCESS = "Validation is success";
 
   public static final String USER_SIGN_UP_SUCCESS = "User SignUp Success";
+  public static final String USER_ID_NOT_FOUND = "User ID is not found";
 
   /** API paths */
   public static final String PATH_COLLEGE_AUTH_BASE = "/api/v1/auth/";

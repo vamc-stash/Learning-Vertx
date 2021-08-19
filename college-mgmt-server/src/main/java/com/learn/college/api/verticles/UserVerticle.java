@@ -84,7 +84,7 @@ public class UserVerticle extends AbstractVerticle {
                         log.info("College Server is running");
                         startFuture.complete();
                       } else {
-                        log.error("College server is failed to start");
+                        log.error("College server is failed to start, {}", serverHandler.cause().getMessage());
                         startFuture.fail(
                             "Server initialization is failed. " + serverHandler.cause());
                       }

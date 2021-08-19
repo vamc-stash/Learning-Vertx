@@ -3,6 +3,7 @@ package com.learn.college.api.rest;
 import com.learn.college.api.helper.UserServiceHelper;
 import com.learn.college.api.service.CourseService;
 import com.learn.college.api.service.UserService;
+import com.learn.college.common.config.ApplicationConfiguration;
 import com.learn.college.common.dto.CourseDTO;
 import com.learn.college.common.dto.StudentCourseDTO;
 import com.learn.college.common.dto.UserDTO;
@@ -101,9 +102,9 @@ public class CollegeRest implements BaseRest {
    * @param context RoutingContext
    */
   private void testRoute(RoutingContext context) {
-    if (context.user() == null
-        || context.user().principal() == null
-        || context.user().principal().getString(DB_USER_ID) == null) {
+    String userId =
+        RestUtils.getUserIdFromContext(context, ApplicationConfiguration.getEnvironment());
+    if (userId == null) {
       log.error(USER_ID_NOT_FOUND);
       RestUtils.handleBadRequest(context, new Throwable(USER_ID_NOT_FOUND));
     }
@@ -143,14 +144,13 @@ public class CollegeRest implements BaseRest {
    * @param context RoutingContext
    */
   private void updateUser(RoutingContext context) {
-    if (context.user() == null
-        || context.user().principal() == null
-        || context.user().principal().getString(DB_USER_ID) == null) {
+    String userId =
+        RestUtils.getUserIdFromContext(context, ApplicationConfiguration.getEnvironment());
+    if (userId == null) {
       log.error(USER_ID_NOT_FOUND);
       RestUtils.handleBadRequest(context, new Throwable(USER_ID_NOT_FOUND));
     }
     UserDTO userDTO = context.get(BODY);
-    String userId = context.user().principal().getString(DB_USER_ID);
     userDTO.setUserId(userId);
     userService.updateUser(userDTO, RestUtils.voidHandler(context, USER_DETAILS_UPDATE_SUCCESS));
   }
@@ -161,16 +161,16 @@ public class CollegeRest implements BaseRest {
    * @param context RoutingContext
    */
   private void registerCourse(RoutingContext context) {
-    if (context.user() == null
-        || context.user().principal() == null
-        || context.user().principal().getString(DB_USER_ID) == null) {
+    String userId =
+        RestUtils.getUserIdFromContext(context, ApplicationConfiguration.getEnvironment());
+    if (userId == null) {
       log.error(USER_ID_NOT_FOUND);
       RestUtils.handleBadRequest(context, new Throwable(USER_ID_NOT_FOUND));
     }
     StudentCourseDTO studentCourseDTO = context.get(BODY);
     courseService.registerCourses(
         studentCourseDTO.getCourseIdList(),
-        context.user().principal().getString(DB_USER_ID),
+        userId,
         RestUtils.voidHandler(context, COURSE_REGISTRATION_SUCCESS));
   }
 
@@ -180,14 +180,18 @@ public class CollegeRest implements BaseRest {
    * @param context RoutingContext
    */
   private void getInfo(RoutingContext context) {
-    if (context.user() == null
-        || context.user().principal() == null
-        || context.user().principal().getString(DB_USER_ID) == null) {
+    String userId =
+        RestUtils.getUserIdFromContext(context, ApplicationConfiguration.getEnvironment());
+    if (userId == null) {
       log.error(USER_ID_NOT_FOUND);
       RestUtils.handleBadRequest(context, new Throwable(USER_ID_NOT_FOUND));
     }
-    String userId = context.user().principal().getString(DB_USER_ID);
-    Integer roleId = context.user().principal().getInteger(PERMISSION_ROLE_ID);
+    Integer roleId =
+        RestUtils.getPermissionIdFromContext(context, ApplicationConfiguration.getEnvironment());
+    if (roleId == null) {
+      log.error(PERMISSION_ROLE_ID);
+      RestUtils.handleBadRequest(context, new Throwable(PERMISSION_ROLE_ID));
+    }
     userService.getInfo(userId, roleId, RestUtils.dataHandler(context));
   }
 }

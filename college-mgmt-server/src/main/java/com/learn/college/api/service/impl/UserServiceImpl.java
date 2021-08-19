@@ -34,6 +34,12 @@ public class UserServiceImpl implements UserService {
   private static final String USER_ROLE_GET_FAILED =
       "Failed to fetch Role information for the User";
 
+  public static final UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+  public static UserServiceImpl getInstance() {
+    return userServiceImpl;
+  }
+
   /**
    * {@inheritDoc}
    *
@@ -175,63 +181,81 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public <T> void getInfo(String userId, Integer roleId, Handler<AsyncResult<T>> handler) {
-    Future<UserDTO> userFuture = userDAO.getUsersById(userId);
-
     if (roleId.equals(EnumConstants.ROLES.ADMIN.getValue())) {
-      AdminDTO adminDTO = new AdminDTO();
-
-      Future<List<UserDTO>> studentsFuture =
-          userDAO.getUsersByRole(EnumConstants.ROLES.STUDENT.getValue());
-      Future<List<UserDTO>> teachersFuture =
-          userDAO.getUsersByRole(EnumConstants.ROLES.TEACHER.getValue());
-      Future<List<CourseDTO>> coursesFuture = courseDao.getAllCourses();
-
-      CompositeFuture.all(userFuture, coursesFuture, studentsFuture, teachersFuture)
-          .onSuccess(
-              success -> {
-                adminDTO.setFirstName(userFuture.result().getFirstName());
-                adminDTO.setLastName(userFuture.result().getLastName());
-                adminDTO.setEmail(userFuture.result().getEmail());
-                adminDTO.addCourses(coursesFuture.result());
-                adminDTO.addStudents(studentsFuture.result());
-                adminDTO.addTeachers(teachersFuture.result());
-                handler.handle((AsyncResult<T>) Future.succeededFuture(adminDTO));
-              })
-          .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
+      fetchAdminInfo(userId, handler);
     } else if (roleId.equals(EnumConstants.ROLES.TEACHER.getValue())) {
-      TeacherDTO teacherDTO = new TeacherDTO();
-      Future<List<UserDTO>> studentsFuture = userDAO.getUsersByTeacherId(userId);
-      Future<List<CourseDTO>> coursesFuture = courseDao.getTeacherCourses(userId);
-
-      CompositeFuture.all(userFuture, coursesFuture, studentsFuture)
-          .onSuccess(
-              success -> {
-                teacherDTO.setFirstName(userFuture.result().getFirstName());
-                teacherDTO.setLastName(userFuture.result().getLastName());
-                teacherDTO.setEmail(userFuture.result().getEmail());
-                teacherDTO.addCourses(coursesFuture.result());
-                teacherDTO.addStudents(studentsFuture.result());
-
-                handler.handle((AsyncResult<T>) Future.succeededFuture(teacherDTO));
-              })
-          .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
+      fetchTeacherInfo(userId, handler);
     } else {
-      StudentDTO studentDTO = new StudentDTO();
-      Future<List<CourseDTO>> coursesFuture = courseDao.getAllCourses();
-      Future<List<CourseDTO>> registeredCoursesFuture = courseDao.getStudentCourses(userId);
-
-      CompositeFuture.all(userFuture, coursesFuture, registeredCoursesFuture)
-          .onSuccess(
-              success -> {
-                studentDTO.setFirstName(userFuture.result().getFirstName());
-                studentDTO.setLastName(userFuture.result().getLastName());
-                studentDTO.setEmail(userFuture.result().getEmail());
-                studentDTO.addCourses(coursesFuture.result());
-                studentDTO.setRegisteredCourses(registeredCoursesFuture.result());
-
-                handler.handle((AsyncResult<T>) Future.succeededFuture(studentDTO));
-              })
-          .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
+      fetchStudentInfo(userId, handler);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> void fetchAdminInfo(String userId, Handler<AsyncResult<T>> handler) {
+    AdminDTO adminDTO = new AdminDTO();
+
+    Future<UserDTO> userFuture = userDAO.getUsersById(userId);
+    Future<List<UserDTO>> studentsFuture =
+        userDAO.getUsersByRole(EnumConstants.ROLES.STUDENT.getValue());
+    Future<List<UserDTO>> teachersFuture =
+        userDAO.getUsersByRole(EnumConstants.ROLES.TEACHER.getValue());
+    Future<List<CourseDTO>> coursesFuture = courseDao.getAllCourses();
+
+    CompositeFuture.all(userFuture, coursesFuture, studentsFuture, teachersFuture)
+        .onSuccess(
+            success -> {
+              adminDTO.setFirstName(userFuture.result().getFirstName());
+              adminDTO.setLastName(userFuture.result().getLastName());
+              adminDTO.setEmail(userFuture.result().getEmail());
+              adminDTO.addCourses(coursesFuture.result());
+              adminDTO.addStudents(studentsFuture.result());
+              adminDTO.addTeachers(teachersFuture.result());
+              handler.handle((AsyncResult<T>) Future.succeededFuture(adminDTO));
+            })
+        .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> void fetchTeacherInfo(String userId, Handler<AsyncResult<T>> handler) {
+    TeacherDTO teacherDTO = new TeacherDTO();
+
+    Future<UserDTO> userFuture = userDAO.getUsersById(userId);
+    Future<List<UserDTO>> studentsFuture = userDAO.getUsersByTeacherId(userId);
+    Future<List<CourseDTO>> coursesFuture = courseDao.getTeacherCourses(userId);
+
+    CompositeFuture.all(userFuture, coursesFuture, studentsFuture)
+        .onSuccess(
+            success -> {
+              teacherDTO.setFirstName(userFuture.result().getFirstName());
+              teacherDTO.setLastName(userFuture.result().getLastName());
+              teacherDTO.setEmail(userFuture.result().getEmail());
+              teacherDTO.addCourses(coursesFuture.result());
+              teacherDTO.addStudents(studentsFuture.result());
+
+              handler.handle((AsyncResult<T>) Future.succeededFuture(teacherDTO));
+            })
+        .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> void fetchStudentInfo(String userId, Handler<AsyncResult<T>> handler) {
+    StudentDTO studentDTO = new StudentDTO();
+
+    Future<UserDTO> userFuture = userDAO.getUsersById(userId);
+    Future<List<CourseDTO>> coursesFuture = courseDao.getAllCourses();
+    Future<List<CourseDTO>> registeredCoursesFuture = courseDao.getStudentCourses(userId);
+
+    CompositeFuture.all(userFuture, coursesFuture, registeredCoursesFuture)
+        .onSuccess(
+            success -> {
+              studentDTO.setFirstName(userFuture.result().getFirstName());
+              studentDTO.setLastName(userFuture.result().getLastName());
+              studentDTO.setEmail(userFuture.result().getEmail());
+              studentDTO.addCourses(coursesFuture.result());
+              studentDTO.setRegisteredCourses(registeredCoursesFuture.result());
+
+              handler.handle((AsyncResult<T>) Future.succeededFuture(studentDTO));
+            })
+        .onFailure(failure -> handler.handle(Future.failedFuture(failure.getCause())));
   }
 }

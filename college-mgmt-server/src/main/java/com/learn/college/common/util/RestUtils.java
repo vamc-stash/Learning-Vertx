@@ -1,6 +1,7 @@
 package com.learn.college.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.learn.college.common.config.EnumConstants;
 import com.learn.college.common.error.ErrorResponse;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -258,5 +259,29 @@ public class RestUtils {
           new ErrorResponse(
               INVALID_QUERY_PARAM.getValue(), INVALID_QUERY_PARAM.getMessage() + param));
     }
+  }
+
+  public static String getUserIdFromContext(RoutingContext context, String env) {
+    if(!EnumConstants.Environment.TEST.toString().equals(env)) {
+      if (context.user() == null
+              || context.user().principal() == null
+              || context.user().principal().getString(DB_USER_ID) == null) {
+        return null;
+      }
+      return context.user().principal().getString(DB_USER_ID);
+    }
+    return null;
+  }
+
+  public static Integer getPermissionIdFromContext(RoutingContext context, String env) {
+    if(!EnumConstants.Environment.TEST.toString().equals(env)) {
+      if (context.user() == null
+              || context.user().principal() == null
+              || context.user().principal().getInteger(PERMISSION_ROLE_ID) == null) {
+        return null;
+      }
+      return context.user().principal().getInteger(PERMISSION_ROLE_ID);
+    }
+    return null;
   }
 }

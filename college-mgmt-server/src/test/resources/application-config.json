@@ -1,0 +1,48 @@
+{
+  "name": "College Management Server Test",
+  "version": "1.0.0",
+  "env": "test",
+  "http": {
+    "port": 8888
+  },
+  "db": {
+    "resources": {
+      "pi_data": {
+        "connection": {
+          "port": 3306,
+          "host": "localhost",
+          "database": "college",
+          "user": "root",
+          "password": "891112@mysql"
+        },
+        "pool": {
+          "maxSize": 5
+        }
+      }
+    }
+  },
+  "deploy": {
+    "instances": 1
+  },
+  "auth": {
+    "jwtAuthOptions": {
+      "pubSecKeys": [
+        {
+          "buffer": "college-mgmt-server-key",
+          "algorithm": "HS256",
+          "symmetric": true
+        }
+      ]
+    },
+    "defaultJwtToken": {
+      "issuer": "College-Server-Provider",
+      "expiresInMinutes": 300,
+      "subject": "auth"
+    },
+    "resetPasswordJwtToken": {
+      "issuer": "College-Server-Provider",
+      "expiresInMinutes": 300,
+      "subject": "auth"
+    }
+  }
+}

@@ -24,9 +24,7 @@ public class AuthServiceImpl implements AuthService {
   private final JWTAuth jwtAuth;
 
   public AuthServiceImpl() {
-    jwtAuth =
-        JWTAuth.create(
-            Vertx.currentContext().owner(), ApplicationConfiguration.getJwtAuthOptions());
+    jwtAuth = ApplicationConfiguration.getJwtAuth();
   }
 
   @Override

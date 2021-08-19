@@ -34,7 +34,7 @@ public class DbUtils {
 
   private static final String EXECUTING_QUERY_PARAMS = "Executing Query: {} \n Params: {}";
 
-  private MySQLPool client = null;
+  private final MySQLPool client;
 
   private static final String CONNECTION = "connection";
   private static final String POOL = "pool";

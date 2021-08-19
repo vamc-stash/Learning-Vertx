@@ -14,7 +14,7 @@ public interface UserService {
    * @return {@link UserServiceImpl}
    */
   static UserServiceImpl getInstance() {
-    return new UserServiceImpl();
+    return UserServiceImpl.getInstance();
   }
 
   /**

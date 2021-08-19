@@ -16,8 +16,8 @@
                 <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
             </PatternLayout>
             <Policies>
-                <OnStartupTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="10 KB"/>
+                <!-- <OnStartupTriggeringPolicy/> -->
+                <SizeBasedTriggeringPolicy size="100 KB"/>
             </Policies>
         </RollingFile>
     </Appenders>

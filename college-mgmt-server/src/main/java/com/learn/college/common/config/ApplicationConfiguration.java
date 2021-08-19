@@ -5,6 +5,7 @@ import com.learn.college.common.lib.ConfigurationRetriever;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import lombok.Getter;
 
@@ -29,6 +30,8 @@ public class ApplicationConfiguration {
   @Getter private static String environment;
   /** The Constant Database Config Object */
   @Getter private static JsonObject primaryResourceConfig;
+  /** The JWTAuth */
+  @Getter private static JWTAuth jwtAuth;
 
   private static final String HTTP = "http";
   private static final String DB = "db";
@@ -64,7 +67,7 @@ public class ApplicationConfiguration {
             JsonObject authConfig = config.getJsonObject(AUTH);
             defaultJwtToken = authConfig.getJsonObject(DEFAULT_JWT_OPTIONS);
             CompositeFuture.join(
-                    setAuthOptions(authConfig, environment), setDbOptions(dbConfig, environment))
+                    setAuthOptions(vertx, authConfig, environment), setDbOptions(dbConfig, environment))
                 .onSuccess(success -> handler.handle(Future.succeededFuture()))
                 .onFailure(failure -> handler.handle(Future.failedFuture(failure)));
           } else {
@@ -82,11 +85,12 @@ public class ApplicationConfiguration {
    * @param env environment
    * @return future CompletionFuture
    */
-  public static Future<Void> setAuthOptions(JsonObject authConfig, String env) {
+  public static Future<Void> setAuthOptions(Vertx vertx, JsonObject authConfig, String env) {
     Promise<Void> promise = Promise.promise();
     JsonObject authOptions = authConfig.getJsonObject(JWT_AUTH_OPTIONS);
-    if (EnumConstants.Environment.LOCAL.toString().equals(env)) {
+    if (EnumConstants.Environment.LOCAL.toString().equals(env) || EnumConstants.Environment.TEST.toString().equals(env)) {
       jwtAuthOptions = new JWTAuthOptions(authOptions);
+      jwtAuth = JWTAuth.create(vertx, jwtAuthOptions);
       /*PubSecKeyOptions options = new PubSecKeyOptions().setAlgorithm("HS256").setBuffer("College");
       jwtAuthOptions = new JWTAuthOptions().addPubSecKey(options);*/
       promise.complete();
@@ -106,7 +110,7 @@ public class ApplicationConfiguration {
   public static Future<Void> setDbOptions(JsonObject dbConfig, String env) {
     Promise<Void> promise = Promise.promise();
     JsonObject resources = dbConfig.getJsonObject(RESOURCES);
-    if (EnumConstants.Environment.LOCAL.toString().equals(env)) {
+    if (EnumConstants.Environment.LOCAL.toString().equals(env) || EnumConstants.Environment.TEST.toString().equals(env)) {
       primaryResourceConfig = resources.getJsonObject(PI_DATA);
       promise.complete();
     } else {
